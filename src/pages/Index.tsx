@@ -8,10 +8,12 @@ import { Textarea } from '@/components/ui/textarea';
 
 const Index = () => {
   const [formData, setFormData] = useState({ name: '', phone: '', message: '' });
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const scrollToSection = (sectionId: string) => {
     const element = document.getElementById(sectionId);
     element?.scrollIntoView({ behavior: 'smooth' });
+    setMobileMenuOpen(false);
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -41,7 +43,35 @@ const Index = () => {
             <Button className="hidden md:block bg-primary hover:bg-primary/90">
               Заказать звонок
             </Button>
+            <button
+              className="md:hidden p-2"
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              aria-label="Меню"
+            >
+              <Icon name={mobileMenuOpen ? 'X' : 'Menu'} size={24} className="text-gray-700" />
+            </button>
           </div>
+          {mobileMenuOpen && (
+            <div className="md:hidden mt-4 pb-4 border-t border-gray-200 pt-4 animate-fade-in">
+              <ul className="flex flex-col gap-4">
+                {['Главная', 'Услуги', 'Цены', 'Вопрос-Ответ', 'Лицензии', 'Контакты'].map((item, index) => (
+                  <li key={index}>
+                    <button
+                      onClick={() => scrollToSection(item.toLowerCase().replace('-', ''))}
+                      className="text-gray-700 hover:text-primary transition-colors font-medium w-full text-left py-2"
+                    >
+                      {item}
+                    </button>
+                  </li>
+                ))}
+                <li>
+                  <Button className="w-full bg-primary hover:bg-primary/90">
+                    Заказать звонок
+                  </Button>
+                </li>
+              </ul>
+            </div>
+          )}
         </nav>
       </header>
 
