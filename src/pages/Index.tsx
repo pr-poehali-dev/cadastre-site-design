@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import Icon from '@/components/ui/icon';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -9,6 +10,69 @@ import { Textarea } from '@/components/ui/textarea';
 const Index = () => {
   const [formData, setFormData] = useState({ name: '', phone: '', message: '' });
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  const services = [
+    {
+      id: 1,
+      icon: 'FileText',
+      title: 'Технический план',
+      shortDesc: 'Подготовка технического плана для постановки объекта на кадастровый учёт',
+      fullDesc: 'Технический план — основной документ для регистрации прав на объект недвижимости. Включает подробные чертежи, описание характеристик здания или сооружения, их местоположение и границы. Необходим для ввода в эксплуатацию, изменения характеристик объекта или его раздела.',
+      price: 'от 15 000',
+      image: 'https://cdn.poehali.dev/projects/fef2a8d7-7c11-44f7-8938-5dd61f36fdf4/files/d18103fa-0876-486c-bcaf-412ecfb64e33.jpg',
+      features: ['Выезд кадастрового инженера', 'Обмеры объекта', 'Подготовка чертежей', 'Согласование в Росреестре']
+    },
+    {
+      id: 2,
+      icon: 'Map',
+      title: 'Межевой план',
+      shortDesc: 'Оформление границ земельного участка и постановка на кадастровый учёт',
+      fullDesc: 'Межевой план устанавливает, уточняет или восстанавливает границы земельного участка. Документ содержит координаты поворотных точек границ, площадь участка, сведения о смежных участках. Обязателен при купле-продаже, разделе или объединении земельных участков.',
+      price: 'от 12 000',
+      image: 'https://cdn.poehali.dev/projects/fef2a8d7-7c11-44f7-8938-5dd61f36fdf4/files/dd178fa1-e02d-49ad-92a8-66e3de644032.jpg',
+      features: ['Геодезические измерения', 'Согласование границ с соседями', 'Оформление документации', 'Регистрация в ЕГРН']
+    },
+    {
+      id: 3,
+      icon: 'MapPin',
+      title: 'Вынос границ в натуру',
+      shortDesc: 'Определение и закрепление границ земельного участка на местности',
+      fullDesc: 'Вынос границ в натуру — геодезические работы по установлению фактических границ участка на местности согласно данным кадастрового учёта. Границы закрепляются межевыми знаками. Услуга необходима при строительстве, установке ограждения или разрешении споров о границах.',
+      price: 'от 8 000',
+      image: 'https://cdn.poehali.dev/projects/fef2a8d7-7c11-44f7-8938-5dd61f36fdf4/files/9269a267-7f32-44cc-aec3-76349e3af32a.jpg',
+      features: ['Полевые геодезические работы', 'Установка межевых знаков', 'Составление акта выноса', 'Фотофиксация']
+    },
+    {
+      id: 4,
+      icon: 'ClipboardCheck',
+      title: 'Акт обследования',
+      shortDesc: 'Документальное подтверждение состояния объекта недвижимости',
+      fullDesc: 'Акт обследования фиксирует фактическое состояние объекта недвижимости, наличие или отсутствие объекта на местности. Требуется для снятия объекта с кадастрового учёта при утрате или уничтожении, а также для подтверждения незавершённого строительства.',
+      price: 'от 6 000',
+      image: 'https://cdn.poehali.dev/projects/fef2a8d7-7c11-44f7-8938-5dd61f36fdf4/files/d18103fa-0876-486c-bcaf-412ecfb64e33.jpg',
+      features: ['Выезд на объект', 'Фотофиксация', 'Составление акта', 'Подготовка заключения']
+    },
+    {
+      id: 5,
+      icon: 'Layout',
+      title: 'Схема КПТ',
+      shortDesc: 'Схема расположения земельного участка на кадастровом плане территории',
+      fullDesc: 'Схема расположения земельного участка на кадастровом плане территории (КПТ) — документ для образования нового земельного участка из земель государственной или муниципальной собственности. Показывает местоположение формируемого участка относительно существующих объектов.',
+      price: 'от 5 000',
+      image: 'https://cdn.poehali.dev/projects/fef2a8d7-7c11-44f7-8938-5dd61f36fdf4/files/dd178fa1-e02d-49ad-92a8-66e3de644032.jpg',
+      features: ['Анализ территории', 'Подготовка схемы', 'Расчёт координат', 'Согласование']
+    },
+    {
+      id: 6,
+      icon: 'FileCheck2',
+      title: 'Заключение кадастрового инженера',
+      shortDesc: 'Экспертное заключение по вопросам кадастрового учёта',
+      fullDesc: 'Заключение кадастрового инженера — официальный документ, содержащий экспертное мнение по спорным вопросам, связанным с объектами недвижимости. Используется при исправлении кадастровых ошибок, определении площади, местоположения границ и других характеристик объектов.',
+      price: 'от 10 000',
+      image: 'https://cdn.poehali.dev/projects/fef2a8d7-7c11-44f7-8938-5dd61f36fdf4/files/d18103fa-0876-486c-bcaf-412ecfb64e33.jpg',
+      features: ['Анализ документов', 'Обследование объекта', 'Экспертная оценка', 'Официальное заключение']
+    }
+  ];
 
   const scrollToSection = (sectionId: string) => {
     const element = document.getElementById(sectionId);
@@ -120,31 +184,73 @@ const Index = () => {
             Предоставляем полный спектр кадастровых услуг для физических и юридических лиц
           </p>
           <div className="grid md:grid-cols-3 gap-8">
-            {[
-              {
-                icon: 'Building2',
-                title: 'Технический план зданий',
-                description: 'Подготовка технического плана для постановки на кадастровый учёт'
-              },
-              {
-                icon: 'FileCheck',
-                title: 'Технический план сооружений',
-                description: 'Оформление технической документации на любые сооружения'
-              },
-              {
-                icon: 'Wrench',
-                title: 'Исправление реестровых ошибок',
-                description: 'Корректировка данных в государственном кадастре недвижимости'
-              }
-            ].map((service, index) => (
-              <Card key={index} className="hover:shadow-lg transition-shadow border-2 hover:border-primary/20">
-                <CardHeader>
+            {services.map((service) => (
+              <Card key={service.id} className="hover:shadow-lg transition-shadow border-2 hover:border-primary/20 flex flex-col">
+                <CardHeader className="flex-grow">
                   <div className="w-16 h-16 bg-primary/10 rounded-lg flex items-center justify-center mb-4">
                     <Icon name={service.icon} size={32} className="text-primary" />
                   </div>
-                  <CardTitle className="font-heading">{service.title}</CardTitle>
-                  <CardDescription className="text-base">{service.description}</CardDescription>
+                  <CardTitle className="font-heading mb-2">{service.title}</CardTitle>
+                  <CardDescription className="text-base">{service.shortDesc}</CardDescription>
+                  <div className="text-2xl font-bold text-primary mt-4 font-heading">{service.price} ₽</div>
                 </CardHeader>
+                <CardContent className="pt-0">
+                  <Dialog>
+                    <DialogTrigger asChild>
+                      <Button variant="outline" className="w-full border-primary text-primary hover:bg-primary hover:text-white">
+                        Подробнее
+                      </Button>
+                    </DialogTrigger>
+                    <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
+                      <DialogHeader>
+                        <DialogTitle className="text-3xl font-heading flex items-center gap-3">
+                          <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center">
+                            <Icon name={service.icon} size={24} className="text-primary" />
+                          </div>
+                          {service.title}
+                        </DialogTitle>
+                        <DialogDescription className="text-base">
+                          {service.shortDesc}
+                        </DialogDescription>
+                      </DialogHeader>
+                      <div className="space-y-6 mt-4">
+                        <img 
+                          src={service.image} 
+                          alt={service.title}
+                          className="w-full h-64 object-cover rounded-lg"
+                        />
+                        <div>
+                          <h3 className="text-xl font-bold mb-3 font-heading">Описание услуги</h3>
+                          <p className="text-gray-700 leading-relaxed">{service.fullDesc}</p>
+                        </div>
+                        <div>
+                          <h3 className="text-xl font-bold mb-3 font-heading">Что входит в услугу</h3>
+                          <ul className="space-y-2">
+                            {service.features.map((feature, idx) => (
+                              <li key={idx} className="flex items-center gap-2">
+                                <Icon name="Check" size={20} className="text-primary flex-shrink-0" />
+                                <span className="text-gray-700">{feature}</span>
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                        <div className="bg-gray-50 p-6 rounded-lg">
+                          <div className="flex items-center justify-between mb-4">
+                            <span className="text-lg font-semibold">Стоимость услуги:</span>
+                            <span className="text-3xl font-bold text-primary font-heading">{service.price} ₽</span>
+                          </div>
+                          <Button 
+                            className="w-full bg-primary hover:bg-primary/90" 
+                            size="lg"
+                            onClick={() => scrollToSection('контакты')}
+                          >
+                            Заказать услугу
+                          </Button>
+                        </div>
+                      </div>
+                    </DialogContent>
+                  </Dialog>
+                </CardContent>
               </Card>
             ))}
           </div>
